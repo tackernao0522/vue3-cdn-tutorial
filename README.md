@@ -122,3 +122,94 @@ Vue.jsのコアは、単純なテンプレート構文を使って宣言的に�
 ```
 
 `v-bind`属性は`ディレクティブと呼ばれます。
+
+## ユーザー入力の制御
+
+ユーザーがアプリケーションと対話できるように、`v-on`ディレクティブを使ってイベントりすなをアタッチし、<br>
+インスタンスのメソッドを呼び出すことができます。<br>
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="event-handling">
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMessage">Reverse Message</button>
+  </div>
+</body>
+
+<script>
+  const EventHandling = {
+    data() {
+      return {
+        message: 'Hello Vue.js!'
+      }
+    },
+    methods: {
+      reverseMessage() {
+        this.message = this.message
+          .split('')
+          .reverse()
+          .join('')
+      }
+    }
+  }
+
+  Vue.createApp(EventHandling).mount('#event-handling')
+</script>
+
+</html>
+```
+
++ 上記の方法では、DOMを触るのではなくアプリケーションの状態を更新することに注意してください。<br>
+DOMの操作は全てVueによって処理されるので、背後にあるロジックを書くことに集中することができます。<br>
+
++ Vueはまた、フォームの入力とアプリケーションの状態を双方向にバインディングするための`v-model`ディレクティブも下記のように提供します。<br>
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="two-way-binding">
+    <p>{{ message }}</p>
+    <input v-model="message" />
+  </div>
+</body>
+
+<script>
+  const TwoWayBinding = {
+    data() {
+      return {
+        message: 'Hello Vue!'
+      }
+    }
+  }
+
+  Vue.createApp(TwoWayBinding).mount('#two-way-binding')
+</script>
+
+</html>
+```
+

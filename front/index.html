@@ -10,24 +10,22 @@
 </head>
 
 <body>
-  <div id="bind-attribute">
-    <span v-bind:title="message">
-      Hover your mouse over me for a few seconds to see my dynamically bound
-      title!
-    </span>
+  <div id="two-way-binding">
+    <p>{{ message }}</p>
+    <input v-model="message" />
   </div>
 </body>
 
 <script>
-  const AttributeBinding = {
+  const TwoWayBinding = {
     data() {
       return {
-        message: 'You loades this page on ' + new Date().toLocaleString()
+        message: 'Hello Vue!'
       }
     }
   }
 
-  Vue.createApp(AttributeBinding).mount('#bind-attribute')
+  Vue.createApp(TwoWayBinding).mount('#two-way-binding')
 </script>
 
 </html>
