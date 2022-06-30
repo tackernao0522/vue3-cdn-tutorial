@@ -10,22 +10,27 @@
 </head>
 
 <body>
-  <div id="two-way-binding">
-    <p>{{ message }}</p>
-    <input v-model="message" />
+  <div id="list-rendering">
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
   </div>
 </body>
 
 <script>
-  const TwoWayBinding = {
+  const ListRendering = {
     data() {
       return {
-        message: 'Hello Vue!'
+        todos: [
+          { text: 'Learn JavaScript' },
+          { text: 'Learn Vue' },
+          { text: 'Build something awesome' },
+        ]
       }
     }
   }
 
-  Vue.createApp(TwoWayBinding).mount('#two-way-binding')
+  Vue.createApp(ListRendering).mount('#list-rendering')
 </script>
 
 </html>

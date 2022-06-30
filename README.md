@@ -213,3 +213,83 @@ DOMの操作は全てVueによって処理されるので、背後にあるロ�
 </html>
 ```
 
+## 条件分岐とループ
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="conditional-rendering">
+    <span v-if="seen">Now you see me</span>
+  </div>
+</body>
+
+<script>
+  const ConditionalRenering = {
+    data() {
+      return {
+        seen: true
+      }
+    }
+  }
+
+  Vue.createApp(ConditionalRenering).mount('#conditional-rendering')
+</script>
+
+</html>
+```
+
++ Vue.jsには他にもかなりの数のディレクティブがあり、それぞれが特定の機能を持っています。<br>
+例えば、`v-for`ディレクティブを使えばアイテムのリストを配列内のデータを使って表示することもできます。<br>
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="list-rendering">
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
+  </div>
+</body>
+
+<script>
+  const ListRendering = {
+    data() {
+      return {
+        todos: [
+          { text: 'Learn JavaScript' },
+          { text: 'Learn Vue' },
+          { text: 'Build something awesome' },
+        ]
+      }
+    }
+  }
+
+  Vue.createApp(ListRendering).mount('#list-rendering')
+</script>
+
+</html>
+```
