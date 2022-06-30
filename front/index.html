@@ -10,27 +10,37 @@
 </head>
 
 <body>
-  <div id="list-rendering">
-    <li v-for="todo in todos">
-      {{ todo.text }}
-    </li>
+  <div id="todo-list-app">
+    <ol>
+      <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+    </ol>
   </div>
 </body>
 
 <script>
-  const ListRendering = {
+  const TodoItem = {
+    props: ['todo'],
+    template: `<li>{{ todo.text }}</li>`
+  }
+
+  const TodoList = {
     data() {
       return {
-        todos: [
-          { text: 'Learn JavaScript' },
-          { text: 'Learn Vue' },
-          { text: 'Build something awesome' },
+        groceryList: [
+          { id: 0, text: 'Vegetables' },
+          { id: 1, text: 'Cheese' },
+          { id: 2, text: 'Whatever else humans are supposed to eat' },
         ]
       }
+    },
+    components: {
+      TodoItem
     }
   }
 
-  Vue.createApp(ListRendering).mount('#list-rendering')
+  const app = Vue.createApp(TodoList)
+
+  app.mount('#todo-list-app')
 </script>
 
 </html>

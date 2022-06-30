@@ -293,3 +293,56 @@ DOMの操作は全てVueによって処理されるので、背後にあるロ�
 
 </html>
 ```
+
+## コンポーネントによる構成
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="todo-list-app">
+    <ol>
+      <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+    </ol>
+  </div>
+</body>
+
+<script>
+  const TodoItem = {
+    props: ['todo'],
+    template: `<li>{{ todo.text }}</li>`
+  }
+
+  const TodoList = {
+    data() {
+      return {
+        groceryList: [
+          { id: 0, text: 'Vegetables' },
+          { id: 1, text: 'Cheese' },
+          { id: 2, text: 'Whatever else humans are supposed to eat' },
+        ]
+      }
+    },
+    components: {
+      TodoItem
+    }
+  }
+
+  const app = Vue.createApp(TodoList)
+
+  app.mount('#todo-list-app')
+</script>
+
+</html>
+```
