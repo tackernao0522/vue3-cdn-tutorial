@@ -320,7 +320,7 @@ DOMの操作は全てVueによって処理されるので、背後にあるロ�
 
 <script>
   const TodoItem = {
-    props: ['todo'],
+    props: ['todo'], // 'todo'(変数）をtemplateと v-bindに指定
     template: `<li>{{ todo.text }}</li>`
   }
 
@@ -345,4 +345,36 @@ DOMの操作は全てVueによって処理されるので、背後にあるロ�
 </script>
 
 </html>
+```
+
+# アプリケーションとコンポーネントのインスタンス
+
+## アプリケーションインスタンスの作成
+
+全ての Vue アプリケーションは `createApp` 関数で新しい`アプリケーションインスタンス(application instance)` を作成するところから始まります:<br>
+
+```js:sample.js
+const app = vue.createApp({
+  /* options */
+})
+```
+
+アプリケーションインスタンスは、そのアプリケーション内のコンポーネントが使えるグローバル（コンポーネント、ディレクティブ、プラグインなど）を登録するために使われます。<br>
+詳しいことはガイドの公判で説明しますが、簡単な例をあげると:<br>
+
+```js:sample.js
+const app = Vue.createApp({})
+app.component('SearchInput', SearchInputComponent)
+app.directive('focus', FocusDirective)
+app.use(LocalePlugin)
+```
+
+アプリケーションインスタンスが公開するほとんどのメソッドは、<br>
+同じインスタンスを返すので、チェーンすることができます:
+
+```js:sample.js
+Vue.createApp({})
+  .component('SearchInput', SearchInputComponent)
+  .directive('focus', FocusDirective)
+  .use(LocalePlugin)
 ```
