@@ -7,37 +7,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="https://unpkg.com/vue@next"></script>
-  <style>
-    .demo {
-      font-family: sans-serif;
-      border: 1px solid #eee;
-      border-radius: 2px;
-      padding: 20px 30px;
-      margin-top: 1em;
-      margin-bottom: 40px;
-      user-select: none;
-      overflow-x: auto;
-    }
-  </style>
 </head>
 
 <body>
-  <div id="example1" class="demo">
-    <p>Using mustaches: {{ rawHtml }}</p>
-    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+  <div id="app">
   </div>
 </body>
 
+<script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script>
 <script>
-  const RenderHtmlApp = {
-    data() {
-      return {
-        rawHtml: '<span style="color: red">This should be red.</span>'
+  app.component('save-button', {
+    created() {
+      // Lodash によるDebounce
+      this.debouncedClick = _.debounce(this.click, 500)
+    },
+    unmounted() {
+      // コンポーネントが削除されたらタイマーをキャンセル
+      this.debouncedClick.cancel()
+    },
+    methods: {
+      click() {
+        // ... クリックに反応 ...
       }
-    }
-  }
-
-  Vue.createApp(RenderHtmlApp).mount('#example1')
+    },
+    template: `
+    <button @click="debouncedClick">
+      Save
+    </button>
+  `
+  })
 </script>
 
 </html>

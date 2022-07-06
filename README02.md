@@ -280,3 +280,229 @@ Mustache は、HTML属性の内部で使用することはできません。<br>
 
 テンプレート式はサンドボックス化されていて、`Math`や`Date`といったグローバルオブジェクトの制限リストにだけアクセスできます。<br>
 テンプレート式内でユーザーが定義したグローバルオブジェクトにアクセスしようとしてはいけません。<br>
+
+# データプロパティとメソッド
+
+## データプロパティ
+
+コンポーネントの `data`オプションは関数です。Vueは新しいコンポーネントのインスタンスを作成する際に、この関数を呼び出します。<br>
+これはオブジェクトを返すもので、Vueはオブジェクトをそのアクティブシステムでラップして、コンポーネントのインスタンスに`$data`として格納します。<br>
+便宜上、そのオブジェクトのトップレベルのプロパティは、コンポーネントのインスタンスを介して直接公開されます:<br>
+
+```js:sample.js
+const app = Vue.createApp({
+  data() {
+    return { count: 4 }
+  }
+})
+
+const vm = app.mount('#app')
+
+console.log(vm.$data.count) // => 4
+console.log(vm.count) // => 4
+
+// vm.count に値を代入すると、$data.countも更新
+vm.count = 5
+console.log(vm.$data.count) // => 5
+
+// ... 逆もまだ同様
+vm.$data.count = 6
+console.log(vm.count) // => 6
+```
+
++ `front/index.html`を編集<br>
+
+```html:index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="app">
+    {{ count }} <!-- result: 6 -->
+  </div>
+</body>
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        count: 4
+      }
+    }
+  })
+
+  const vm = app.mount('#app')
+
+  console.log(vm.$data.count) // => 4
+  console.log(vm.count) // => 4
+
+  // vm.count に値を代入すると、$data.count も更新
+  vm.count = 5
+  console.log(vm.$data.count) // => 5
+
+  // ... 逆もまた同様
+  vm.$data.count = 6
+  console.log(vm.count)
+</script>
+
+</html>
+```
+これらのインスタンスプロパティは、インスタンスの初回作成時にのみ追加されます。<br>
+そのため、`data`関数から返されたオブジェクトに、それらが全て含まれていることを確認する必要があります。<br>
+必要に応じて、必要な値がまだ利用できないプロパティには、`null`や`undefined`、またはその他のプレースホルダーの値を使ってください。<br>
+
+新しいプロパティを`data`に含めずに、コンポーネントのインスタンスに直接追加することはできます。<br>
+しかし、このプロパティはリアクティブな`$data`オブジェクトによって支えられていないので、Vueのリアクティブシステムによって、自動的に追跡されることはありません。<br>
+
+Vueは、コンポーネントのインスタンスを介して自身のビルドインAPIを公開する際に、`$`をプレフィックスとして使います。<br>
+また、内部プロパティのために`_`を予約しています。<br>
+トップレベルの`data`プロパティの名前に、これらの文字から始まる名前を使うことは避けるべきです。<br>
+
+
+## メソッド
+
+コンポーネントのインスタンスにメソッドを追加するには、`methods`オプションを使います。<br>
+これは必要なメソッドを含むオブジェクトでなければなりません:
+
+```js:sample.js
+const app = Vue.createApp({
+  data() {
+    return { count: 4 }
+  },
+  methods: {
+    increment() {
+      // `this` はコンポーネントインスタンスを参照
+      this.count++
+    }
+  }
+})
+
+const vm = app.mount('#app')
+
+console.log(vm.count) // => 4
+
+vm.incremant()
+
+console.log(vm.count) // => 5
+```
+
+Vueは、`methods` の `this` を自動的に束縛して、常にコンポーネントのインスタンスを参照します。<br>
+これにより、メソッドがイベントリスナーやコールバックとして使われる際に、正しい`this`の値を保持することができます。<br>
+Vueが適切ね `this`の値を束縛するのを防ぐため、`methods`を定義する際にはアロー関数を使うのは避けるべきです。<br>
+
+コンポーネントのインスタンスの他の全てのプロパティと同様に、`methods`はコンポーネントのテンプレート内からアクセスできます。<br>
+テンプレート内からはよくイベントリスナーとして使われます。<br>
+
+```html:sample.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="app">
+    <button @click="increment">Up vote</button>
+      {{ count }}
+  </div>
+</body>
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return { count: 4 }
+    },
+    methods: {
+      increment() {
+        // `this` はコンポーネントインスタンスを参照
+        this.count++
+      }
+    }
+  })
+
+  const vm = app.mount('#app')
+
+  console.log(vm.count) // => 4
+</script>
+
+</html>
+```
+
+上の例では、`<button>`がクリックされると、`increment`メソッドが呼ばれます。<br>
+
+また、テンプレートから直接メソッドを呼び出すこともできます。後で説明しますが、通常は代わりに算出プロパティを使うのが良いです。<br>
+しかし、メソッドを使うことは算出プロパティが実行可能なオプションではない場合に役に立ちます。<br>
+テンプレートがJavaScriptの式をサポートしていれば、どこでもメソッドを呼び出すことができます:
+
+```html:sample.html
+<span :title="toTitleDate(date)">
+  {{ formatDate(date) }}
+</span>
+```
+
+`toTitleDate` や `formatDate` メソッドがどれかリアクティブなデータにアクセスすると、あたかもテンプレートで直接使われていたかのように、それはレンダリングの依存関係として追跡されます。<br>
+
+テンプレートから呼び出されたメソッドは、データの変更や非同期処理の発火などの副作用があってはなりません。<br>
+もしそのようなことをしたくなったら、代わりにライフサイクルフック(https://v3.ja.vuejs.org/guide/instance.html#%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB%E3%83%95%E3%83%83%E3%82%AF)を使うべきです。<br>
+
+## Debounce（デバウンス）と Throttle（スロットル）
+
+Vueは、`Debounce`や`Throttle`のサポートが組み込まれていませんが、Lodah(https://lodash.com/)などのライブラリを使って実装することができます。<br>
+
+コンポーネントが一度しか使われない場合には、`methods`の中で直接`Debounce`を適用することができます:<br>
+
+```html:sample.html
+<script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script>
+<script>
+  Vue.createApp({
+    methods: {
+      // Lodashによる Debounce
+      click: _.debounce(function() {
+        // ... クリックに反応
+      }, 500)
+    }
+  }).mount('#app')
+</script>
+```
+
+しかし、この方法ではコンポーネントが再利用される場合に、全てのコンポーネントが同じ`Debounce`関数を共有するため、問題が起こる可能性があります。<br>
+コンポーネントのインスタンスをお互いに独立させるために、`created` ライフサイクルフックに`Debounce`関数を追加することができます:
+
+```js:sample.js
+<script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script>
+<script>
+  app.component('save-button', {
+    created() {
+      // Lodash によるDebounce
+      this.debouncedClick = _.debounce(this.click, 500)
+    },
+    unmounted() {
+      // コンポーネントが削除されたらタイマーをキャンセル
+      this.debouncedClick.cancel()
+    },
+    methods: {
+      click() {
+        // ... クリックに反応 ...
+      }
+    },
+    template: `
+    <button @click="debouncedClick">
+      Save
+    </button>
+  `
+  })
+</script>
+```
