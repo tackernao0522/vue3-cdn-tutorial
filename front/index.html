@@ -10,32 +10,25 @@
 </head>
 
 <body>
-  <div id="app">
+  <div id="demo">
+    {{ fullName }}
   </div>
 </body>
 
-<script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script>
 <script>
-  app.component('save-button', {
-    created() {
-      // Lodash によるDebounce
-      this.debouncedClick = _.debounce(this.click, 500)
-    },
-    unmounted() {
-      // コンポーネントが削除されたらタイマーをキャンセル
-      this.debouncedClick.cancel()
-    },
-    methods: {
-      click() {
-        // ... クリックに反応 ...
+  const vm = Vue.createApp({
+    data() {
+      return {
+        firstName: 'Foo',
+        lastName: 'Bar',
       }
     },
-    template: `
-    <button @click="debouncedClick">
-      Save
-    </button>
-  `
-  })
+    computed: {
+      fullName() {
+        return this.firstName + ' ' + this.lastName
+      }
+    }
+  }).mount('#demo')
 </script>
 
 </html>
