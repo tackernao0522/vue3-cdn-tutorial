@@ -10,25 +10,21 @@
 </head>
 
 <body>
-  <div id="demo">
-    {{ fullName }}
+  <div id="app">
+    <div :style="styleObject"></div>
   </div>
 </body>
-
 <script>
-  const vm = Vue.createApp({
+  Vue.createApp({
     data() {
       return {
-        firstName: 'Foo',
-        lastName: 'Bar',
-      }
-    },
-    computed: {
-      fullName() {
-        return this.firstName + ' ' + this.lastName
+        styleObject: {
+          color: 'red',
+          fontSize: '13px'
+        }
       }
     }
-  }).mount('#demo')
+  }).mount('#app')
 </script>
 
 </html>
