@@ -48,49 +48,26 @@
 
 <body>
   <div id="app" class="demo">
-    <button v-for="tab in tabs" v-bind:key="tab" v-bind:class="['tab-button', { active: currentTab === tab }]"
-      v-on:click="currentTab = tab">
-      {{ tab }}
-    </button>
-
-    <component v-bind:is="currentTabComponent" class="tab"></component>
+    <date-picker @change="showChange"></date-picker>
   </div>
 </body>
 
 <script>
   const App = Vue.createApp({
-    data() {
-      return {
-        currentTab: 'Home',
-        tabs: ['Home', 'Posts', 'Archive']
-      }
-    },
-    computed: {
-      currentTabComponent() {
-        return 'tab-' + this.currentTab.toLowerCase()
+    methods: {
+      showChange(event) {
+        console.log(event.target.value)
       }
     }
   })
 
-  App.component('tab-home', {
+  App.component('date-picker', {
     template: `
-      <div class="demo-tab">
-        Home component
-      </div>
-    `
-  })
-  App.component('tab-posts', {
-    template: `
-      <div class="demo-tab">
-        Posts component
-      </div>
-    `
-  })
-  App.component('tab-archive', {
-    template: `
-      <div class="demo-tab">
-        Archive component
-      </div>
+      <select>
+        <option value="1">Yesterday</option>
+        <option value="2">Today</option>
+        <option value="3">Tomorrow</option>
+      </select>
     `
   })
 
