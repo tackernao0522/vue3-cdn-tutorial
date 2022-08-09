@@ -19,59 +19,39 @@
       user-select: none;
       overflow-x: auto;
     }
-
-    .tab-button {
-      padding: 6px 10px;
-      border-top-left-radius: 3px;
-      border-top-right-radius: 3px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      background: #f0f0f0;
-      margin-bottom: -1px;
-      margin-right: -1px;
-    }
-
-    .tab-button:hover {
-      background: #e0e0e0;
-    }
-
-    .tab-button.active {
-      background: #e0e0e0;
-    }
-
-    .demo-tab {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
   </style>
 </head>
 
 <body>
   <div id="app" class="demo">
-    <date-picker @change="showChange"></date-picker>
+    <my-component v-model:description.capitalize="myText"></my-component>
   </div>
 </body>
 
 <script>
-  const App = Vue.createApp({
-    methods: {
-      showChange(event) {
-        console.log(event.target.value)
+  const app = Vue.createApp({
+    data() {
+      return {
+        myText: ''
       }
     }
   })
 
-  App.component('date-picker', {
+  app.component('my-component', {
+    props: ['description', 'descriptionModifiers'],
+    emits: ['update:description'],
     template: `
-      <select>
-        <option value="1">Yesterday</option>
-        <option value="2">Today</option>
-        <option value="3">Tomorrow</option>
-      </select>
-    `
+      <input type="text"
+        :value="description"
+        @input="$emit('update:description', $event.target.value)"
+      >
+    `,
+    created() {
+      console.log(this.descriptionModifiers) // { capitalize: true }
+    }
   })
 
-  App.mount('#app')
+  app.mount('#app');
 </script>
 
 </html>
