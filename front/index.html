@@ -19,36 +19,37 @@
       user-select: none;
       overflow-x: auto;
     }
+
+    li {
+      color: green;
+    }
   </style>
 </head>
 
 <body>
   <div id="app" class="demo">
-    <my-component v-model:description.capitalize="myText"></my-component>
+    <todo-list #default="{ item }">
+      <i class="fas fa-check"></i>
+      <span class="green">{{ item }}</span>
+    </todo-list>
   </div>
 </body>
 
 <script>
-  const app = Vue.createApp({
+  const app = Vue.createApp({})
+  app.component('todo-list', {
     data() {
       return {
-        myText: ''
+        items: ['Feed a cat', 'Buy milk']
       }
-    }
-  })
-
-  app.component('my-component', {
-    props: ['description', 'descriptionModifiers'],
-    emits: ['update:description'],
+    },
     template: `
-      <input type="text"
-        :value="description"
-        @input="$emit('update:description', $event.target.value)"
-      >
-    `,
-    created() {
-      console.log(this.descriptionModifiers) // { capitalize: true }
-    }
+      <ul>
+        <li v-for="(item, index) in items">
+          {{ item }}
+        </li>
+      </ul>
+    `
   })
 
   app.mount('#app');
